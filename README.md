@@ -1,24 +1,24 @@
-# Rinehart Analysis with Word Vectors<img src='https://avatars.githubusercontent.com/u/90112108' align='right' width='180' height='104'>
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/NLPaladins/rinehartAnalysis_wordVectors/master/LICENSE)
+# Rinehart Analysis Question Answering<img src='https://avatars.githubusercontent.com/u/90112108' align='right' width='180' height='104'>
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/NLPaladins/rinehartAnalysis_questionAnswering/master/LICENSE)
 
 ## About  <a name = "about"></a>
-**[Project Board](https://github.com/NLPaladins/rinehartAnalysis_wordVectors/projects/1)**, **[Current Issues](https://github.com/NLPaladins/rinehartAnalysis_wordVectors/issues)**, **[Assignment](https://utk.instructure.com/courses/127299/assignments/1074171)**
+**[Current Issues](https://github.com/NLPaladins/rinehartAnalysis_questionAnswering/issues)**, **[Assignment](https://utk.instructure.com/courses/127299/assignments/1080458)**
 
 Rinehart Analysis using Word Vectors for NLP (ECE-617) Project 2.
 
 ### Libraries Overview <a name = "lib_overview"></a>
 
-All the libraries are located under [\<project root\>/nlp_libs](https://github.com/NLPaladins/rinehartAnalysis_wordVectors/nlp_libs)
-- [\<project root\>/nlp_libs/books](https://github.com/NLPaladins/rinehartAnalysis_wordVectors/nlp_libs/books): This project's code (imported later)
--[\<project root\>/nlp_libs/configuration](https://github.com/NLPaladins/rinehartAnalysis_wordVectors/nlp_libs/configuration): Class that creates config objects from yml files
-- [\<project root\>/nlp_libs/fancy_logger](https://github.com/NLPaladins/rinehartAnalysis_wordVectors/nlp_libs/fancy_logger): Logger that can be used instead of prints for text formatting (color, bold, underline etc)
+All the libraries are located under [\<project root\>/nlp_libs](https://github.com/NLPaladins/rinehartAnalysis_questionAnswering/nlp_libs)
+- [\<project root\>/nlp_libs/books](https://github.com/NLPaladins/rinehartAnalysis_questionAnswering/nlp_libs/books): This project's code (imported later)
+-[\<project root\>/nlp_libs/configuration](https://github.com/NLPaladins/rinehartAnalysis_questionAnswering/nlp_libs/configuration): Class that creates config objects from yml files
+- [\<project root\>/nlp_libs/fancy_logger](https://github.com/NLPaladins/rinehartAnalysis_questionAnswering/nlp_libs/fancy_logger): Logger that can be used instead of prints for text formatting (color, bold, underline etc)
 
 ### Where to put the code  <a name = "#putcode"></a>
-- Place the preprocessing functions/classes in [nlp_libs/books/preprocessing.py](https://github.com/NLPaladins/rinehartAnalysis_wordVectors/nlp_libs/books/preprocessing.py)
-- The custom word embeddings functions/classes (task 1) in [nlp_libs/books/word_embeddings.py](https://github.com/NLPaladins/rinehartAnalysis_wordVectors/nlp_libs/books/word_embeddings.py) (separate class)
-- The pretrained word embeddings functions/classes (task 2) in [nlp_libs/books/word_embeddings.py](https://github.com/NLPaladins/rinehartAnalysis_wordVectors/nlp_libs/books/word_embeddings.py) (separate class)
-- The functions/classes (if any) that compare the results (tasks 3, 4, 5) in [nlp_libs/books/compare_statistics.py](https://github.com/NLPaladins/rinehartAnalysis_wordVectors/nlp_libs/books/compare_statistics.py)
-- Any plotting related functions in [nlp_libs/books/plotter.py](https://github.com/NLPaladins/rinehartAnalysis_wordVectors/nlp_libs/books/plotter.py)
+- Place the preprocessing functions/classes in [nlp_libs/books/preprocessing.py](https://github.com/NLPaladins/rinehartAnalysis_questionAnswering/nlp_libs/books/preprocessing.py)
+- The custom word embeddings functions/classes (task 1) in [nlp_libs/books/word_embeddings.py](https://github.com/NLPaladins/rinehartAnalysis_questionAnswering/nlp_libs/books/word_embeddings.py) (separate class)
+- The pretrained word embeddings functions/classes (task 2) in [nlp_libs/books/word_embeddings.py](https://github.com/NLPaladins/rinehartAnalysis_questionAnswering/nlp_libs/books/word_embeddings.py) (separate class)
+- The functions/classes (if any) that compare the results (tasks 3, 4, 5) in [nlp_libs/books/compare_statistics.py](https://github.com/NLPaladins/rinehartAnalysis_questionAnswering/nlp_libs/books/compare_statistics.py)
+- Any plotting related functions in [nlp_libs/books/plotter.py](https://github.com/NLPaladins/rinehartAnalysis_questionAnswering/nlp_libs/books/plotter.py)
 
 **The code is reloaded automatically. Any class object needs to reinitialized though.** 
 
@@ -72,7 +72,7 @@ $ make install env=venv
 ### Modifying the Configuration <a name = "configuration"></a>
 
 You may need to configure the yml file. There is an already configured yml file 
-under [confs/proj_2.yml](confs/proj_2.yml).
+under [confs/proj_3.yml](confs/proj_3.yml).
 
 ### Local Jupyter <a name = "local_jupyter"></a>
 
@@ -94,7 +94,7 @@ And open the [main.ipynb](main.ipynb).
 
 ### Google Collab <a name = "google_collab"></a>
 
-Just Open this [Google Collab Link](https://colab.research.google.com/github/NLPaladins/rinehartAnalysis_wordVectors/blob/main/main.ipynb).
+Just Open this [Google Collab Link](https://colab.research.google.com/github/NLPaladins/rinehartAnalysis_questionAnswering/blob/main/main.ipynb).
 
 ## Adding New Libraries <a name = "adding_libs"></a>
 
