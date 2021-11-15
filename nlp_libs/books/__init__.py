@@ -1,7 +1,7 @@
 """Books sub-package."""
 
 from .processed_book import *
-from .word_embeddings import *
+from .question_answering import *
 from .plotter import *
 
 __email__ = "jmerlet@vols.utk.edu, kgeorgio.vols.utk.edu, mlane42@vols.utk.edu"
