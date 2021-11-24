@@ -4,7 +4,7 @@ from typing import *
 from nlp_libs.fancy_logger.colorized_logger import ColorizedLogger
 import spacy
 import string
-
+# Spacy
 nlp = spacy.load('en_core_web_sm')
 
 
@@ -87,6 +87,14 @@ class ProcessedBook:
         else:
             return True
 
+    def get_sentences(self) -> List[str]:
+        # Get sentences
+        nlp.add_pipe('sentencizer')
+        doc = nlp(self.clean_text)
+        sentences = [sent.text.strip().replace('\n', ' ') for sent in doc.sents]
+
+        return sentences
+
     def lemmatize_by_sentence(self, word_subs=None):
         lemmasWpunct = self.lemmatize(remove_punctuation=False, word_subs=word_subs)
         bySentence = ' '.join(lemmasWpunct).split(".")
@@ -110,6 +118,28 @@ class ProcessedBook:
         # ([word1, word2, ...], word_to_sub_to), where the list
         # of words in the tuple are words to change and where
         # word_to_sub_to is the word to change them to
+        punctuation = string.punctuation
+        text = self.clean_text
+        text = re.sub(r'\u2014', ' ', text)
+        if lower:
+            text = text.lower()
+        if word_subs:
+            text = self.substitute_words_to_word(text, word_subs)
+        text = nlp(text)
+        lemmas = []
+        for word in text:
+            lemma = word.lemma_.strip()
+            if lemma:
+                if not remove_stopwords or (remove_stopwords and lemma not in lemmas):
+                    if remove_punctuation:
+                        if lemma not in punctuation:
+                            lemmas.append(lemma)
+                    else:
+                        lemmas.append(lemma)
+        return lemmas
+
+    def get_lemmatized_sentences(self, lower=True, remove_stopwords=False, remove_punctuation=True,
+                      word_subs=None):
         punctuation = string.punctuation
         text = self.clean_text
         text = re.sub(r'\u2014', ' ', text)
