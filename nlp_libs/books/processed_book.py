@@ -87,6 +87,14 @@ class ProcessedBook:
         else:
             return True
 
+    def get_sentences(self) -> List[str]:
+        # Get sentences
+        nlp.add_pipe('sentencizer')
+        doc = nlp(self.clean_text)
+        sentences = [sent.text.strip().replace('\n', ' ') for sent in doc.sents]
+
+        return sentences
+
     def lemmatize_by_sentence(self, word_subs=None):
         lemmasWpunct = self.lemmatize(remove_punctuation=False, word_subs=word_subs)
         bySentence = ' '.join(lemmasWpunct).split(".")
