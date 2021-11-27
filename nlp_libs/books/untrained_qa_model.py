@@ -81,12 +81,11 @@ class SquadDataset(torch.utils.data.Dataset):
     def __len__(self):
         return len(self.encodings.input_ids)
 
-def run_epochs(model, train_loader, optim, device):
+def run_epochs(model, train_loader, optim, device, epochs=3):
     starttime = time.time()
-    for epoch in range(2):
+    for epoch in range(epochs):
         e_starttime = time.time()
         for batch in train_loader:
-            b_start = time.time()
             optim.zero_grad()
             input_ids = batch['input_ids'].to(device)
             attention_mask = batch['attention_mask'].to(device)
@@ -98,7 +97,6 @@ def run_epochs(model, train_loader, optim, device):
             loss.backward()
             optim.step()
             b_end = time.time()
-            print("Batch time", b_end-b_start, flush=True)
         e_endtime = time.time()
 
         print("Epoch Time: ", e_endtime - e_starttime, flush=True)
@@ -107,7 +105,7 @@ def run_epochs(model, train_loader, optim, device):
     model.eval()
 
 
-def read_and_extract_train_val_data(train_path, test_path, question_contexts, questions, answers): 
+def read_and_extract_train_val_data(train_path, test_path, question_contexts, questions, answers, num_epochs=3): 
     print("Loading data")
     train_contexts, train_questions, train_answers = read_squad(train_path)
     val_contexts, val_questions, val_answers = read_squad(test_path)
@@ -143,4 +141,6 @@ def read_and_extract_train_val_data(train_path, test_path, question_contexts, qu
     optim = AdamW(model.parameters(), lr=5e-5)
 
     print("Training")
-    run_epochs(model, train_loader, optim, device)
+    run_epochs(model, train_loader, optim, device, num_epochs)
+
+    return model, tokenizer
