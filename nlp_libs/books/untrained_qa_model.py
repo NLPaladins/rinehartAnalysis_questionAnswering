@@ -105,7 +105,7 @@ def run_epochs(model, train_loader, optim, device, epochs=3):
     model.eval()
 
 
-def read_and_extract_train_val_data(train_path, test_path, question_contexts, questions, answers, num_epochs=3): 
+def read_and_extract_train_val_data(train_path, test_path, question_contexts, questions, answers, num_epochs=3, lr=5e-5): 
     print("Loading data")
     train_contexts, train_questions, train_answers = read_squad(train_path)
     val_contexts, val_questions, val_answers = read_squad(test_path)
@@ -138,7 +138,7 @@ def read_and_extract_train_val_data(train_path, test_path, question_contexts, qu
 
     print("Creating Train Loader")
     train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
-    optim = AdamW(model.parameters(), lr=5e-5)
+    optim = AdamW(model.parameters(), lr=lr)
 
     print("Training")
     run_epochs(model, train_loader, optim, device, num_epochs)
