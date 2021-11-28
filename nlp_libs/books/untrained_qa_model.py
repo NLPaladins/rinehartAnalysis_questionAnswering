@@ -107,7 +107,18 @@ def run_epochs(model, train_loader, optim, device, epochs=3):
 
 def read_and_extract_train_val_data(train_path, test_path, question_contexts, questions, answers, num_epochs=3, lr=5e-5): 
     print("Loading data")
+
+    if len(question_contexts) != len(questions) or len(questions) != len(answers):
+        raise("SOMETHING IS AWRY! ")
+
     train_contexts, train_questions, train_answers = read_squad(train_path)
+
+    if question_contexts is not None and questions is not None and questions is not None:
+        train_contexts.append(question_contexts)
+        train_questions.append(questions)
+        train_answers.append(answers)
+
+
     val_contexts, val_questions, val_answers = read_squad(test_path)
 
     add_end_idx(train_answers, train_contexts)
@@ -144,3 +155,4 @@ def read_and_extract_train_val_data(train_path, test_path, question_contexts, qu
     run_epochs(model, train_loader, optim, device, num_epochs)
 
     return model, tokenizer
+
