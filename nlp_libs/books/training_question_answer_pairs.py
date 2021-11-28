@@ -131,10 +131,10 @@ antagonist_arrival_questions = [
 
 antagonist_arrival_answers = [
     {"text": "Gertrude", "answer_start": 26},
-    {"text": "Murder", "answer_start": 668},
-    {"text": "Murder", "answer_start": 668},
+    {"text": "murder", "answer_start": 668},
+    {"text": "murder", "answer_start": 668},
     {"text": "Anne Watson", "answer_start": 297},
-    {"text": "The Greenwood Club", "answer_start": 367},
+    {"text": "the Greenwood Club", "answer_start": 367},
     {"text": "Three", "answer_start": 352}, 
     {"text": "Liddy", "answer_start": 121}
 ]
@@ -209,9 +209,9 @@ crime_scene_questions = [
 crime_scene_answers = [
     {"text": "three o'clock in the morning", "answer_start": 3},
     {"text": "in her room", "answer_start": 179},
-    {"text": "It was empty. The bed had not been occupied.", "answer_start": 929},
+    {"text": "It was empty; the bed had not been occupied!", "answer_start": 929},
     {"text": "the Greenwood Club", "answer_start": 1519},
-    {"text": "on the floor, face down, with his arms extended.", "answer_start": 2027},
+    {"text": "on the floor, face down, with his arms extended", "answer_start": 2027},
     # {"text": "Three", "answer_start": 352},
     {"text": "it had not been occupied", "answer_start": 1080}
 ]
@@ -269,7 +269,7 @@ evidence_questions = [
 evidence_answers = [
     {"text":  "from above", "answer_start": 213},
     {"text":  "at close range","answer_start": 246},
-    {"text":  "a charred cigar", "answer_start": 929},
+    {"text":  "a charred cigar", "answer_start": 494},
     {"text":  "certainly before three o'clock in the morning", "answer_start": 858},
     {"text":  "at three", "answer_start": 1376},
     {"text":  "At a quarter before three", "answer_start": 1559},
@@ -360,3 +360,27 @@ evidence_data = create_question_object(
 resolution_data = create_question_object(
     resolution_context, resolution_questions, resolution_answers
 )
+
+datalist = [
+    protagonist_data,
+    antagonist_data,
+    crime_scene_data,
+    evidence_data,
+    resolution_data
+]
+
+total_contexts = []
+total_questions = []
+total_answers = []
+
+for data in datalist:
+    for index in range(len(data['questions'])):
+        total_contexts.append(data['context'])
+        total_questions.append(data['questions'][index])
+        total_answers.append(data['answers'][index])
+        if data['answers'][index]['text'] not in data['context']:
+            print(data['context'])
+            print(data['questions'][index])
+            print(data['answers'][index]['text'])
+            print("\n\n\n")
+

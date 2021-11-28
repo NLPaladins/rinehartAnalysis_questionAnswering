@@ -6,7 +6,8 @@ from transformers import DistilBertForQuestionAnswering
 import torch
 from torch.utils.data import DataLoader
 from transformers import AdamW
-
+import pandas as pd
+from transformers import pipeline
 
 ## Extracted from hugging face documentation
 def read_squad(path):
@@ -32,22 +33,26 @@ def read_squad(path):
 
 def add_end_idx(answers, contexts):
     for answer, context in zip(answers, contexts):
-        gold_text = answer['text']
-        start_idx = answer['answer_start']
-        end_idx = start_idx + len(gold_text)
+        try: 
+            gold_text = answer['text']
+            start_idx = answer['answer_start']
+            end_idx = start_idx + len(gold_text)
 
-        # sometimes squad answers are off by a character or two – fix this
-        if context[start_idx:end_idx] == gold_text:
-            answer['answer_end'] = end_idx
-        elif context[start_idx-1:end_idx-1] == gold_text:
-            answer['answer_start'] = start_idx - 1
-            # When the gold label is off by one character
-            answer['answer_end'] = end_idx - 1
-        elif context[start_idx-2:end_idx-2] == gold_text:
-            answer['answer_start'] = start_idx - 2
-            # When the gold label is off by two characters
-            answer['answer_end'] = end_idx - 2
-
+            # sometimes squad answers are off by a character or two – fix this
+            if context[start_idx:end_idx] == gold_text:
+                answer['answer_end'] = end_idx
+            elif context[start_idx-1:end_idx-1] == gold_text:
+                answer['answer_start'] = start_idx - 1
+                # When the gold label is off by one character
+                answer['answer_end'] = end_idx - 1
+            elif context[start_idx-2:end_idx-2] == gold_text:
+                answer['answer_start'] = start_idx - 2
+                # When the gold label is off by two characters
+                answer['answer_end'] = end_idx - 2
+        except: 
+            print("Answer: ", answer)
+            print("Context: ", context)
+            raise()
 ## Next we need to convert our character start/end positions to token start/end positions.
 ## When using 🤗 Fast Tokenizers, we can use the built in char_to_token() method.
 
@@ -56,17 +61,20 @@ def add_token_positions(encodings, answers, tokenizer):
     start_positions = []
     end_positions = []
     for i in range(len(answers)):
-        start_positions.append(encodings.char_to_token(
-            i, answers[i]['answer_start']))
-        end_positions.append(encodings.char_to_token(
-            i, answers[i]['answer_end'] - 1))
+        try:
+            start_positions.append(encodings.char_to_token(
+                i, answers[i]['answer_start']))
+            end_positions.append(encodings.char_to_token(
+                i, answers[i]['answer_end'] - 1))
 
-        # if start position is None, the answer passage has been truncated
-        if start_positions[-1] is None:
-            start_positions[-1] = tokenizer.model_max_length
-        if end_positions[-1] is None:
-            end_positions[-1] = tokenizer.model_max_length
-
+            # if start position is None, the answer passage has been truncated
+            if start_positions[-1] is None:
+                start_positions[-1] = tokenizer.model_max_length
+            if end_positions[-1] is None:
+                end_positions[-1] = tokenizer.model_max_length
+        except Exception as ex: 
+            print(answers[i])
+            raise(ex)
     encodings.update({'start_positions': start_positions,
                       'end_positions': end_positions})
 
@@ -81,7 +89,7 @@ class SquadDataset(torch.utils.data.Dataset):
     def __len__(self):
         return len(self.encodings.input_ids)
 
-def run_epochs(model, train_loader, optim, device, epochs=3):
+def run_epochs(model, train_loader, optim, device, tokenizer, contexts, questions, lr, epochs=3):
     starttime = time.time()
     for epoch in range(epochs):
         e_starttime = time.time()
@@ -99,6 +107,26 @@ def run_epochs(model, train_loader, optim, device, epochs=3):
             b_end = time.time()
         e_endtime = time.time()
 
+        nlp = pipeline('question-answering', model = model, tokenizer=tokenizer, device=0)
+
+
+        answers = []
+        scores = []
+        starts = []
+        lrs = []
+        epochs = []
+        for idx in range(len(questions)): 
+            response = nlp(question=questions[idx], context=contexts[idx])
+            answers.append(response['answer'])
+            scores.append(response['score'])
+            starts.append(response['start'])
+            lrs.append(lr)
+            epochs.append(epoch)
+        
+        outputobject = { 'answer': answers, 'score':scores, 'start':starts, 'learning_rate': lrs, 'epoch':epochs }
+        df = pd.DataFrame(data=outputobject)
+        df.to_csv(f'model_out_e{epoch}_lr{lr}.tsv', sep='\t')
+        
         print("Epoch Time: ", e_endtime - e_starttime, flush=True)
     endtime = time.time()
     print('Total time: ', endtime-starttime)
@@ -112,13 +140,20 @@ def read_and_extract_train_val_data(train_path, test_path, question_contexts, qu
         raise("SOMETHING IS AWRY! ")
 
     train_contexts, train_questions, train_answers = read_squad(train_path)
+    
+    print(len(train_contexts))
+    print(len(train_questions))
+    print(len(train_answers))
 
     if question_contexts is not None and questions is not None and questions is not None:
-        train_contexts.append(question_contexts)
-        train_questions.append(questions)
-        train_answers.append(answers)
-
-
+        train_contexts = [*train_contexts, *question_contexts]
+        train_questions = [*train_questions, *questions]
+        train_answers = [*train_answers, *answers]
+   
+    print(len(train_contexts))
+    print(len(train_questions))
+    print(len(train_answers))
+    
     val_contexts, val_questions, val_answers = read_squad(test_path)
 
     add_end_idx(train_answers, train_contexts)
@@ -152,7 +187,7 @@ def read_and_extract_train_val_data(train_path, test_path, question_contexts, qu
     optim = AdamW(model.parameters(), lr=lr)
 
     print("Training")
-    run_epochs(model, train_loader, optim, device, num_epochs)
+    run_epochs(model, train_loader, optim, device, tokenizer, question_contexts,  questions, lr, num_epochs)
 
     return model, tokenizer
 
