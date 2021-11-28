@@ -203,7 +203,7 @@ crime_scene_questions = [
     "Who was the cook calling?", 
     "Where was the man huddled?", 
     # "Which rooms did they check?", 
-    "Did they find anyon ein Mr. Bailey's room?", 
+    "Did they find anyone in Mr. Bailey's room?", 
 ]
 
 crime_scene_answers = [
