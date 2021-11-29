@@ -6,7 +6,6 @@ import spacy
 import string
 
 
-
 # logger = ColorizedLogger(logger_name='Process Book', color='cyan')
 
 class ProcessedBook:
@@ -119,6 +118,28 @@ class ProcessedBook:
         # ([word1, word2, ...], word_to_sub_to), where the list
         # of words in the tuple are words to change and where
         # word_to_sub_to is the word to change them to
+        punctuation = string.punctuation
+        text = self.clean_text
+        text = re.sub(r'\u2014', ' ', text)
+        if lower:
+            text = text.lower()
+        if word_subs:
+            text = self.substitute_words_to_word(text, word_subs)
+        text = nlp(text)
+        lemmas = []
+        for word in text:
+            lemma = word.lemma_.strip()
+            if lemma:
+                if not remove_stopwords or (remove_stopwords and lemma not in lemmas):
+                    if remove_punctuation:
+                        if lemma not in punctuation:
+                            lemmas.append(lemma)
+                    else:
+                        lemmas.append(lemma)
+        return lemmas
+
+    def get_lemmatized_sentences(self, lower=True, remove_stopwords=False, remove_punctuation=True,
+                      word_subs=None):
         punctuation = string.punctuation
         text = self.clean_text
         text = re.sub(r'\u2014', ' ', text)
