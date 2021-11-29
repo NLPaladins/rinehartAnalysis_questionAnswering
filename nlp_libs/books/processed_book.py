@@ -5,7 +5,6 @@ from nlp_libs.fancy_logger.colorized_logger import ColorizedLogger
 import spacy
 import string
 
-nlp = spacy.load('en_core_web_sm')
 
 
 # logger = ColorizedLogger(logger_name='Process Book', color='cyan')
@@ -88,6 +87,7 @@ class ProcessedBook:
             return True
 
     def get_sentences(self) -> List[str]:
+        nlp = spacy.load('en_core_web_sm')
         # Get sentences
         nlp.add_pipe('sentencizer')
         doc = nlp(self.clean_text)
@@ -114,6 +114,7 @@ class ProcessedBook:
         return sentenceList
 
     def lemmatize(self, lower=True, remove_stopwords=False, remove_punctuation=True, word_subs=None):
+        nlp = spacy.load('en_core_web_sm')
         # if word_subs is not None, it is expecting the format
         # ([word1, word2, ...], word_to_sub_to), where the list
         # of words in the tuple are words to change and where

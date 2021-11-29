@@ -28,11 +28,10 @@ def make_space_above(axes, top_margin=1):
     return fig
 
 
-def _plot_scores(tokens, scores, counts, title, base_c):
+def _plot_scores(tokens, scores, counts, title, base_c, min_score):
     """ Plot Scores"""
 
-    fig, ax = plt.subplots(figsize=(21, 1
-                                    ))
+    fig, ax = plt.subplots(figsize=(21, 1))
 
     fig = make_space_above(ax, top_margin=7)
     fig.patch.set_facecolor('white')
@@ -42,8 +41,8 @@ def _plot_scores(tokens, scores, counts, title, base_c):
     colors = [(*base_c, c) for c in counts]
     edge_colors = [(*base_c, c) for c in counts]
     ax.tick_params(axis='both', which='minor', labelsize=29)
-    bar = ax.bar(x_vals, scores, color=colors, linewidth=1,
-                 edgecolor=edge_colors, label="Color intensity: Same Answer Count")
+    ax.bar(x_vals, scores, color=colors, linewidth=1,
+           edgecolor=edge_colors, label="Color intensity: Same Answer Count")
     # plt.colorbar(label="Same Answer Count", orientation="horizontal", ax=ax, mappable=bar)
     ax.set_title(title)
     ax.set_xlabel("Answers to successive windows")
@@ -52,6 +51,11 @@ def _plot_scores(tokens, scores, counts, title, base_c):
     tokens = [limit_size(token) for token in tokens]
     ax.set_xticks(ticks=[i for i in range(len(tokens))], labels=tokens,
                   fontsize=12, rotation=60, ha='right')
+    if min_score > 0.05:
+        y_min = min_score - 0.05
+    else:
+        y_min = min_score
+    ax.set_ylim(y_min, 1.0)
     ax.legend()
 
     fig.tight_layout()
@@ -96,4 +100,5 @@ def plot_scores(answers, title: str = '', min_score: float = 0.3, base_c: Tuple 
             scores.append(s)
             token_counts.append(c)
 
-    _plot_scores(tokens=tokens, scores=scores, counts=token_counts, title=title, base_c=base_c)
+    _plot_scores(tokens=tokens, scores=scores, counts=token_counts, title=title,
+                 base_c=base_c, min_score=min_score)
