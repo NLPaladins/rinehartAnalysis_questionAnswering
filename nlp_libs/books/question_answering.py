@@ -7,7 +7,7 @@ from tqdm import tqdm, tqdm_notebook
 nlp = pipeline("question-answering")
 
 
-def ask_question(question: str, sentences: List[str], window: int) -> List[Dict]:
+def ask_question(question: str, sentences: List[str], window: int, max_words: int = 512) -> List[Dict]:
     print("Total number of sentences: ", len(sentences))
     answers = []
     window_splits = tqdm(list(enumerate(sentences))[::window])
@@ -22,7 +22,7 @@ def ask_question(question: str, sentences: List[str], window: int) -> List[Dict]
             previous_block = current_block.copy()
             current_block[0] += len(sentence.split(' '))
             current_block[1] += ' ' + sentence
-            if current_block[0] > 300:
+            if current_block[0] > max_words:
                 answer = nlp(question=question, context=previous_block[1])
                 answers.append(answer)
                 break
@@ -40,7 +40,7 @@ def get_sorted_grouped_answers(answers: List[Dict]):
         sum_score = 0.0
         for val in values:
             sum_score += val['score']
-        avg_score = sum_score/len(values)
+        avg_score = sum_score / len(values)
         mean_score_answers.append({"answer": key, "mean_score": avg_score})
 
     return sorted(mean_score_answers, key=sort_key, reverse=True)

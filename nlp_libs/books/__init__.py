@@ -3,6 +3,7 @@
 from .processed_book import *
 from .question_answering import *
 from .plotter import *
+from .untrained_qa_model import * 
 
 __email__ = "jmerlet@vols.utk.edu, kgeorgio.vols.utk.edu, mlane42@vols.utk.edu"
 __author__ = "jeanmerlet, drkostas, LaneMatthewJ"
