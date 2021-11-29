@@ -123,10 +123,12 @@ def run_epochs(model, train_loader, optim, device, tokenizer, contexts, question
             lrs.append(lr)
             epochs.append(epoch)
         
-        outputobject = { 'answer': answers, 'score':scores, 'start':starts, 'learning_rate': lrs, 'epoch':epochs }
+        outputobject = {'questions': questions, 'answer': answers, 'score':scores, 'start':starts, 'learning_rate': lrs, 'epoch':epochs }
         df = pd.DataFrame(data=outputobject)
         df.to_csv(f'model_out_e{epoch}_lr{lr}.tsv', sep='\t')
-        
+       
+        torch.save(model.state_dict(), f'model_epoch{epoch}_lr{lr}.torch')
+
         print("Epoch Time: ", e_endtime - e_starttime, flush=True)
     endtime = time.time()
     print('Total time: ', endtime-starttime)
