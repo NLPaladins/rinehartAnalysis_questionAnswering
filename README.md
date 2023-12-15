@@ -39,7 +39,7 @@ All the libraries are located under [\<project root\>/nlp_libs](https://github.c
 
 ## Prerequisites <a name = "prerequisites"></a>
 
-You need to have a machine with Python >= 3.9 and any Bash based shell (e.g. zsh) installed.
+You need to have a machine with Python >= 3.9 and any Bourne based shell (e.g. bash, zsh ..) installed.
 Having installed conda is also recommended.
 
 ```Shell
